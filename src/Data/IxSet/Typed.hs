@@ -243,12 +243,11 @@ infixr 5 !:::
 -- We cannot currently derive Typeable for 'IxSet':
 --
 --   * In ghc-7.6, Typeable isn't supported for non-* kinds.
---   * In ghc-7.8, see bug #8950. We can work around this, but I rather
---     would wait for a proper fix.
-
--- deriving instance Data (IxSet ixs a)
--- deriving instance Typeable IxSet
-
+--   * In ghc-7.8, see bug #8950.
+#if __GLASGOW_HASKELL__ >= 710
+deriving instance Typeable IxSet
+deriving instance (Ord a, Data a, Typeable a, Typeable ixs, Data (IxList ixs a)) => Data (IxSet ixs a)
+#endif
 
 --------------------------------------------------------------------------
 -- Type-level tools for dealing with indexed sets.
